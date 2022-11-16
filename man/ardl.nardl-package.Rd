@@ -27,8 +27,7 @@ uecm_case3 <- ardl_uecm(x = fuel_price,
                                    dep_var = c('fpp'),
                                    expl_var = c('bdc', 'wti'),
                                    graph_save = FALSE,
-                                   case = 3
-)
+                                   case = 3)
 uecm_case3
 data(inf_expec)
 output_n1_case5 <- nardl_uecm(x = fuel_price,

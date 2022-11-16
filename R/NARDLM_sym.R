@@ -1,40 +1,13 @@
 nardl_uecm_sym <- function(x,
                            assumption = c('SRSR'),
                            decomp,
-                           control = NULL,
-                           c_q_order = NULL,
+                           control = c(2),
+                           c_q_order = c(2),
                            p_order = c(3),
                            q_order = c(4),
                            dep_var,
                            graph_save = FALSE, 
                            case = 3){
-  lagm <- function(m, nLags)
-  {
-    if(!is.matrix(m))
-      stop("Trying to lag something that's not a matrix")
-    
-    d <- dim(m)
-    if(is.null(colnames(m)))
-      colnames(m) <- as.character(seq_len(d[2]))
-    if(nLags > d[1])
-      stop(sprintf("You try to create %d lags but there's only %d rows in m.",
-                   nLags, d[1]))
-    
-    lagM <- matrix(NA,nrow=d[1], ncol = d[2]*nLags)
-    
-    for(i in seq_len(nLags)){
-      cid <- seq(1:d[2]) + d[2]*(i-1)
-      
-      lagM[(i+1):d[1],cid] <- m[1:(d[1]-i),]
-    }
-    
-    cnames <- outer(colnames(m),seq_len(nLags), FUN = paste, sep = "_")
-    
-    colnames(lagM) <- c(cnames)
-    
-    return(lagM)
-    
-  }
   if(assumption %in% c( 'LRSR','SRSR') == FALSE)
     warning('assumption should take either LRSR or SRSR.')
   {
@@ -387,15 +360,15 @@ nardl_uecm_sym <- function(x,
   
   lm_test <- c()
   lm_test$statistic <- round(bgtest(fit, type = "F", order = 4)$statistic,3)
-  lm_test$p.value <- round(bgtest(fit, type = "F", order = 4)$p.value,3)# has to be > 0.05 
+  lm_test$p.value <- round(bgtest(fit, type = "F", order = 4)$p.value,3) 
   lm_test <- cbind(lm_test)
   lm_test <- cbind(lm_test[[1]],lm_test[[2]])
   colnames(lm_test) <- c('BG:statistics','p.value')
   rownames(lm_test) <- decomp
   
   arch <- c()
-  arch$statistic <- round(ArchTest(fit$residuals, q_order)$statistic,2)
-  arch$p.value <- round(ArchTest(fit$residuals, q_order)$p.value,2)
+  arch$statistic <- round(ArchTest(fit$residuals, q_order)$statistic,3)
+  arch$p.value <- round(ArchTest(fit$residuals, q_order)$p.value,3)
   arch <- cbind(arch)
   arch <- cbind(arch[[1]],arch[[2]])
   colnames(arch) <- c('ARCH LM:statistics','p.value')

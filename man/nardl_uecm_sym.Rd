@@ -2,16 +2,16 @@
 \alias{nardl_uecm_sym}
 \title{
 Short-run symmetry restrictions (SRSR) and the
-long-run symmetry restrictions (LRSR).
+longrun symmetry restrictions (LRSR).
 
 }
 \description{
 ~~
 Performs one of Short-run symmetry restrictions or the
-long-run symmetry restrictions.
+longrun symmetry restrictions.
 }
 \usage{
-nardl_uecm_sym(x, assumption = c("SRSR"), decomp, control = NULL, c_q_order = NULL, 
+nardl_uecm_sym(x, assumption = c("SRSR"), decomp, control = c(2), c_q_order = c(2), 
 p_order = c(3), q_order = c(4), dep_var, graph_save = FALSE, case = 3)
 }
 \arguments{
@@ -19,17 +19,17 @@ p_order = c(3), q_order = c(4), dep_var, graph_save = FALSE, case = 3)
 A dataframe object.  S3 dataframe object not applicable.
 }
   \item{assumption}{
-The Short-run symmetry restrictions (SRSR), the default, assume the transitory asymmetric effect is insignificant and testing the long-run asymmetric effect. Long-run symmetry restrictions (LRSR) imposes symmetric effect on the long-run coefficients of the positive and negative decomposed variable, and assuming the presence of transitory asymmetric effect.
+The Short-run symmetry restrictions (SRSR), the default, assume the transitory asymmetric effect is insignificant and testing the longrun asymmetric effect. longrun symmetry restrictions (LRSR) imposes symmetric effect on the longrun coefficients of the positive and negative decomposed variable, and assuming the presence of transitory asymmetric effect.
 
 }
   \item{decomp}{
 A variable to be decomposed into positive (pos) and negative (neg)
 }
   \item{control}{
-A character vector with one element serving as the second variable single control variable. The default is NULL, but when control variable is specified, 'third' should be TRUE.
+A character vector with one element serving as the second variable single control variable. The default is c(2) and applicable when control variable is specified.
 }
   \item{c_q_order}{
-Lag order for the control. the default value is c(2) and only applicable when third = TRUE, and control is specified.
+Lag order for the control. The default value is c(2) and only applicable when control is specified.
 }
   \item{p_order}{
 Number of lags for dependent variable (dep_var).
@@ -48,7 +48,7 @@ A numerical vector of either 1, 2 3, 4 or 5. The default value is 3 - restricted
 }
 \details{
 The Short-run symmetry restrictions (SRSR), the default may be useful in obtaining more accurate estimate when the sample is small (SYG, 2014). Besides, this may be necessary when the short-run asymmetric effect does not exist.
-Long-run symmetry restrictions (LRSR) imposes symmetric effect on the positive and negative decomposed variable.
+longrun symmetry restrictions (LRSR) imposes symmetric effect on the positive and negative decomposed variable.
 }
 \value{
 \item{NARDL_ECM_fit }{This display the NARDL ECM lm fit}

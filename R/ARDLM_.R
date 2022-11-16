@@ -167,7 +167,7 @@ ardl_uecm <- \(x,
     else{
       vcc <-vc[1:nrow(vc), 1:ncol(vc)]
     }
-  }  
+  }
   
   lrse <- sqrt(diag(fb %*% vcc %*% t(fb)))
   lrt <- coof/lrse
@@ -203,49 +203,34 @@ ardl_uecm <- \(x,
     }
   }
   
-  p_star <- function(x) {
-    pvalue <- x[,2]
-    stat <- x[,1]
-    mystars <- ifelse(pvalue < .001, "*** ", ifelse(pvalue < .01, "**  ", ifelse(pvalue < .05, "*   ", ifelse(pvalue < .1, ".   ", "    "))))
-    stats <- matrix(paste(stat, mystars, sep=""), nrow = nrow(x))
-    message('Note: ***p < 0.001; **p < 0.01; *p < 0.05 ; (.)p < 0.1  \n')
-    colnames(stats) <- 'stat'
-    rownames(stats) <- rownames(x)
-    return(stats)
-  }
-  
   jbtest <- c()
-  jbtest$statistic <- round(jarque.bera.test(fit_case_$residuals)$statistic,2)
-  jbtest$p.value <- round(jarque.bera.test(fit_case_$residuals)$p.value,2)
+  jbtest$statistic <- round(jarque.bera.test(fit_case_$residuals)$statistic,3)
+  jbtest$p.value <- round(jarque.bera.test(fit_case_$residuals)$p.value,3)
   jbtest <- cbind(jbtest)
   jbtest <- cbind(jbtest[[1]],jbtest[[2]])
   colnames(jbtest) <- c('JB:statistics','p.value')
   rownames(jbtest) <- dep_var
   
-  jbtest <- p_star(jbtest)
-  
   lm_test <- c()
-  lm_test$statistic <- round(bgtest(fit_case_, type = "F", order = 4)$statistic,2)
-  lm_test$p.value <- round(bgtest(fit_case_, type = "F", order = 4)$p.value,2)
+  lm_test$statistic <- round(bgtest(fit_case_, type = "F", order = 4)$statistic,3)
+  lm_test$p.value <- round(bgtest(fit_case_, type = "F", order = 4)$p.value,3)
   lm_test <- cbind(lm_test)
   lm_test <- cbind(lm_test[[1]],lm_test[[2]])
   colnames(lm_test) <- c('BG:statistics','p.value')
   rownames(lm_test) <- dep_var
-  lm_test <- p_star(lm_test)
   
   arch <- c()
-  arch$statistic <- round(ArchTest(fit_case_$residuals, max(q_order))$statistic,2)
-  arch$p.value <- round(ArchTest(fit_case_$residuals, max(q_order))$p.value,2)
+  arch$statistic <- round(ArchTest(fit_case_$residuals, max(q_order))$statistic,3)
+  arch$p.value <- round(ArchTest(fit_case_$residuals, max(q_order))$p.value,3)
   arch <- cbind(arch)
   arch <- cbind(arch[[1]],arch[[2]])
   colnames(arch) <- c('ARCH LM:statistics','p.value')
   rownames(arch) <- dep_var
-  arch <- p_star(arch)
   
   diag <- cbind('lm test' = (lm_test),
                 'arch test' = (arch), 
                 'normality test' = (jbtest))
-  colnames(diag) <- c('lm test','arch test','normality test')
+  colnames(diag) <- c('lm test','p-value','arch test','p-value','normality test','p-value')
   
   nobs <- nobs(fit_case_)
   stab_plot <- function(graph_save){

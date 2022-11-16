@@ -1,40 +1,13 @@
 nardl_uecm <- function(x,
                        decomp,
                        control = NULL,
-                       c_q_order = NULL,
+                       c_q_order = c(2),
                        p_order = c(3),
                        q_order = c(4),
                        dep_var,
                        graph_save = FALSE, 
                        case = 3
 ){
-  lagm <- function(m, nLags) #This function, lagm  is available from nardl package helper functions
-  {
-    if(!is.matrix(m))
-      stop("Trying to lag something that's not a matrix")
-    
-    d <- dim(m)
-    if(is.null(colnames(m)))
-      colnames(m) <- as.character(seq_len(d[2]))
-    if(nLags > d[1])
-      stop(sprintf("You try to create %d lags but there's only %d rows in m.",
-                   nLags, d[1]))
-    
-    lagM <- matrix(NA,nrow=d[1], ncol = d[2]*nLags)
-    
-    for(i in seq_len(nLags)){
-      cid <- seq(1:d[2]) + d[2]*(i-1)
-      
-      lagM[(i+1):d[1],cid] <- m[1:(d[1]-i),]
-    }
-    
-    cnames <- outer(colnames(m),seq_len(nLags), FUN = paste, sep = "_")
-    
-    colnames(lagM) <- c(cnames)
-    
-    return(lagM)
-    
-  }
   if(!is.null(control) == T){
     df <- c()
     df$y <- x[,dep_var]
@@ -286,12 +259,12 @@ nardl_uecm <- function(x,
   {
     if("(Intercept)" %in% rownames(coeff) == TRUE){
       fb1 <- lvars/coeff[[2]]^2
-      fb2 <- (-coeff[[2]]) * diag(nrow(as.matrix(fb1)))
+      fb2 <- (-1/coeff[[2]]) * diag(nrow(as.matrix(fb1)))
       
     }
     else{
       fb1 <- lvars/coeff[[1]]^2
-      fb2 <- (-coeff[[1]]) * diag(nrow(as.matrix(fb1)))
+      fb2 <- (-1/coeff[[1]]) * diag(nrow(as.matrix(fb1)))
     }
   }
 
@@ -418,47 +391,32 @@ nardl_uecm <- function(x,
   colnames(sr_asym_test) <- c('statistics','p.value')
   rownames(sr_asym_test) <- decomp
   
-  p_star <- function(x) {
-    pvalue <- x[,2]
-    stat <- x[,1]
-    mystars <- ifelse(pvalue < .001, "*** ", ifelse(pvalue < .01, "**  ", ifelse(pvalue < .05, "*   ", ifelse(pvalue < .1, ".   ", "    "))))
-    stats <- matrix(paste(stat, mystars, sep=""), nrow = nrow(x))
-    message('Note: ***p < 0.001; **p < 0.01; *p < 0.05 ; (.)p < 0.1  \n')
-    colnames(stats) <- 'stat'
-    rownames(stats) <- rownames(x)
-    return(stats)
-  }
-  
   jbtest <- c()
-  jbtest$statistic <- round(jarque.bera.test(fit$residuals)$statistic,2)
-  jbtest$p.value <- round(jarque.bera.test(fit$residuals)$p.value,2)
+  jbtest$statistic <- round(jarque.bera.test(fit$residuals)$statistic,3)
+  jbtest$p.value <- round(jarque.bera.test(fit$residuals)$p.value,3)
   jbtest <- cbind(jbtest)
   jbtest <- cbind(jbtest[[1]],jbtest[[2]])
   colnames(jbtest) <- c('JB:statistics','p.value')
   rownames(jbtest) <- decomp
   
-  jbtest <- p_star(jbtest)
-  
   lm_test <- c()
-  lm_test$statistic <- round(bgtest(fit, type = "F", order = 4)$statistic,2)
-  lm_test$p.value <- round(bgtest(fit, type = "F", order = 4)$p.value,2)
+  lm_test$statistic <- round(bgtest(fit, type = "F", order = 4)$statistic,3)
+  lm_test$p.value <- round(bgtest(fit, type = "F", order = 4)$p.value,3)
   lm_test <- cbind(lm_test)
   lm_test <- cbind(lm_test[[1]],lm_test[[2]])
   colnames(lm_test) <- c('BG:statistics','p.value')
   rownames(lm_test) <- decomp
-  lm_test <- p_star(lm_test)
   
   arch <- c()
-  arch$statistic <- round(ArchTest(fit$residuals, q_order)$statistic,2)
-  arch$p.value <- round(ArchTest(fit$residuals, q_order)$p.value,2)
+  arch$statistic <- round(ArchTest(fit$residuals, q_order)$statistic,3)
+  arch$p.value <- round(ArchTest(fit$residuals, q_order)$p.value,3)
   arch <- cbind(arch)
   arch <- cbind(arch[[1]],arch[[2]])
   colnames(arch) <- c('ARCH LM:statistics','p.value')
   rownames(arch) <- decomp
-  arch <- p_star(arch)
   
   diag <- cbind('lm test' = (lm_test),'arch test' = (arch), 'normality test' = (jbtest))
-  colnames(diag) <- c('lm test','arch test','normality test')
+  colnames(diag) <- c('lm test','pvalue', 'arch test','pvalue','normality test','pvalue')
   
   nobs <- nobs(fit)
   e <-  fit$residuals

@@ -1,2 +1,7 @@
-New release of v1.0.0
+New release of v1.0.1
 o CRAN submission
+
+New release of v1.0.2
+o Review of documentation
+o The diagnostic test values for ardl_uecm() and nardl_uecm() now display the p-values alongside the test statistic.
+o Review of nardl_uecm(). Please recalculate the longrun relations.

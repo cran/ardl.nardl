@@ -1,7 +1,7 @@
 Package: ardl.nardl
 Type: Package
 Title: Linear and Nonlinear Autoregressive Distributed Lag Models
-Version: 1.0.1
+Version: 1.0.2
 Date: 2022-10-20
 Authors@R: 
       c(person("Eric I.", "Otoakhia", role = c("aut", "cre"), email = "otoakhiai@gmail.com"))
@@ -17,7 +17,7 @@ Imports: graphics(>= 4.2.1), dplyr(>= 1.0.10), rlist(>= 0.4.6.2),
         0.9-38), texreg(>= 1.38.6), stringr(>= 1.4.0), tseries(>=
         0.10-51)
 LazyData: true
-Packaged: 2022-11-03 08:43:30 UTC; dell
+Packaged: 2022-11-16 10:02:25 UTC; dell
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2022-11-04 09:20:02 UTC
+Date/Publication: 2022-11-16 13:40:05 UTC

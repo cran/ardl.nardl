@@ -17,7 +17,7 @@ A dataframe object.  S3 dataframe object not applicable.
 is the lag for the dependent variable (dep_var). Default value is c(2)
 }
   \item{q_order}{
-A numeric vector containing the lags for each expl_var. A vector of two lags (ie c(3,4)) which corresponds to the expl_var (say c('x1','x2') where x1 has lag of 3 and x2 has lag of 4).
+A numeric vector containing the lags for each explanatory variable. A vector of two lags (i.e c(3,4)) which corresponds to the expl_var (say c('x1','x2') where x1 has lag of 3 and x2 has lag of 4).
 }
   \item{dep_var}{
 Character vector containing one dependent variable
@@ -65,8 +65,7 @@ uecm_case3 <- ardl_uecm(x = fuel_price,
                                    dep_var = c('fpp'),
                                    expl_var = c('bdc', 'wti'),
                                    graph_save = FALSE,
-                                   case = 3
-)
+                                   case = 3)
 uecm_case3
 uecm_case3$cointegration
 uecm_case3$Longrun_relation
@@ -78,8 +77,7 @@ uecm_case2 <- ardl_uecm(x = fuel_price,
                                   dep_var = c('fpp'),
                                   expl_var = c('wti'),
                                   graph_save = TRUE,
-                                  case = 2
-)
+                                  case = 2)
 uecm_case2
 uecm_case2$cointegration
 uecm_case2$Longrun_relation

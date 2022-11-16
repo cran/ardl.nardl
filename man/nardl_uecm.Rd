@@ -7,7 +7,7 @@ Estimate the nonlinear ARDL (NARDL) Error Correction Model
 Function to estimate Shin, Yu, and Greenwood-Nimmo (2014) nonlinear ARDL (NARDL), the NARDL ECM, and conduct the bounds test for cointegration.
 }
 \usage{
-nardl_uecm(x, decomp, control = NULL, c_q_order = NULL, 
+nardl_uecm(x, decomp, control = NULL, c_q_order = c(2), 
 p_order = c(3), q_order = c(4), dep_var, graph_save = FALSE, case = 3)
 }
 \arguments{
@@ -18,10 +18,10 @@ A dataframe object.  S3 dataframe object not applicable.
 A variable to be decomposed into positive (pos) and negative (neg)
 }
   \item{control}{
-A character vector with one element serving as the second variable single control variable. The default is NULL, but when control variable is specified, 'third' should be TRUE.
+A character vector with one element serving as the second variable single control variable. The default is NULL, but when control variable is specified.
 }
   \item{c_q_order}{
-Lag order for the control. the default value is c(2) and only applicable when third = TRUE, and control is specified.
+Lag order for the control. the default value is c(2) and only applicable when control is specified.
 }
   \item{p_order}{
 Number of lags for dependent variable (dep_var).
