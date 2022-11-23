@@ -5,7 +5,7 @@ A function in 'dynamac' package to Perform Pesaran, Shin, and Smith (2001) coint
 
 }
 \description{
-This is an exportable version of Jordan and Philips (2020). Please, see the dynamac package for the full documentation and due reference be given to the authors of dynamac  - Jordan and Philips (2020).
+This is an Abridged version of Jordan and Philips (2020). Please, see the dynamac package for the full documentation and due reference be given to the authors of dynamac  - Jordan and Philips (2020).
 }
 \usage{
 dynamac_pkg_bounds_test(obs, fstat, tstat = NULL, case, k)

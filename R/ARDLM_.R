@@ -1,12 +1,14 @@
-ardl_uecm <- \(x,
+ardl_uecm <- function(x,
                p_order = c(2), 
                q_order,
                dep_var,
+               order_l = 4,
                graph_save = FALSE,
                expl_var,
                case = 3){
   
   df <- c()
+  x <- na.omit(x)
   df$y <- x[,dep_var]
   y <- model.matrix(~ y -1, df)
   lhs <- 'y'
@@ -204,33 +206,39 @@ ardl_uecm <- \(x,
   }
   
   jbtest <- c()
-  jbtest$statistic <- round(jarque.bera.test(fit_case_$residuals)$statistic,3)
-  jbtest$p.value <- round(jarque.bera.test(fit_case_$residuals)$p.value,3)
+  jbtest$statistic <- round(jarque.bera.test(fit_case_$residuals)$statistic,4)
+  jbtest$p.value <- round(jarque.bera.test(fit_case_$residuals)$p.value,4)
   jbtest <- cbind(jbtest)
   jbtest <- cbind(jbtest[[1]],jbtest[[2]])
-  colnames(jbtest) <- c('JB:statistics','p.value')
+  colnames(jbtest) <- c('statistics','p.value')
   rownames(jbtest) <- dep_var
   
   lm_test <- c()
-  lm_test$statistic <- round(bgtest(fit_case_, type = "F", order = 4)$statistic,3)
-  lm_test$p.value <- round(bgtest(fit_case_, type = "F", order = 4)$p.value,3)
+  lm_test$statistic <- round(bgtest(fit_case_, type = "Chisq", order = order_l)$statistic,4)
+  lm_test$p.value <- round(bgtest(fit_case_, type = "Chisq", order = order_l)$p.value,4)
   lm_test <- cbind(lm_test)
   lm_test <- cbind(lm_test[[1]],lm_test[[2]])
-  colnames(lm_test) <- c('BG:statistics','p.value')
+  colnames(lm_test) <- c('statistics','p.value')
   rownames(lm_test) <- dep_var
   
   arch <- c()
-  arch$statistic <- round(ArchTest(fit_case_$residuals, max(q_order))$statistic,3)
-  arch$p.value <- round(ArchTest(fit_case_$residuals, max(q_order))$p.value,3)
+  arch$statistic <- round(ArchTest(fit_case_$residuals, order_l)$statistic,4)
+  arch$p.value <- round(ArchTest(fit_case_$residuals, order_l)$p.value,4)
   arch <- cbind(arch)
   arch <- cbind(arch[[1]],arch[[2]])
-  colnames(arch) <- c('ARCH LM:statistics','p.value')
+  colnames(arch) <- c('statistics','p.value')
   rownames(arch) <- dep_var
   
-  diag <- cbind('lm test' = (lm_test),
-                'arch test' = (arch), 
-                'normality test' = (jbtest))
-  colnames(diag) <- c('lm test','p-value','arch test','p-value','normality test','p-value')
+  reset_test <- c()
+  reset_test$statistic <- round(resettest(fit_case_, power = 2, type = 'princomp')$statistic,4)
+  reset_test$p.value <- round(resettest(fit_case_, power = 2, type = 'princomp')$p.value,4)
+  reset_test <- cbind(reset_test)
+  reset_test <- cbind(reset_test[[1]],reset_test[[2]])
+  colnames(reset_test) <- c('statistics','p.value')
+  rownames(reset_test) <- dep_var
+  
+  diag <- rbind(lm_test, arch, jbtest, reset_test)
+  rownames(diag) <- c('BG_SC_lm_test', 'LM_ARCH_test','normality_test', 'RESET_test')
   
   nobs <- nobs(fit_case_)
   stab_plot <- function(graph_save){

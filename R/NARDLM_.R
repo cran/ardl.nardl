@@ -5,11 +5,13 @@ nardl_uecm <- function(x,
                        p_order = c(3),
                        q_order = c(4),
                        dep_var,
+                       order_l = 4,
                        graph_save = FALSE, 
                        case = 3
 ){
   if(!is.null(control) == T){
     df <- c()
+    x <- na.omit(x)
     df$y <- x[,dep_var]
     df$x1 <- x[,decomp]
     df$x2 <- x[,control]
@@ -124,6 +126,7 @@ nardl_uecm <- function(x,
   }
   else {
     df <- c()
+    x <- na.omit(x)
     df$y <- x[,dep_var]
     df$x1 <- x[,decomp]
     x <- model.matrix(~ x1 -1, df)
@@ -336,11 +339,6 @@ nardl_uecm <- function(x,
     }
   }
   
-  rcap = matrix(c(0), 1, 2)
-  rcap[1, 1] = 1
-  rcap[1, 2] = -1
-  rcap
-  rsml = matrix(c(0), 1, 1)
   coof_lres <- coof[c(bn,bp)]
   vcc1 <- vcc[c(names(coof_lres[1]), names(coof_lres[2])), 
                c(names(coof_lres[1]), names(coof_lres[2]))]
@@ -392,31 +390,39 @@ nardl_uecm <- function(x,
   rownames(sr_asym_test) <- decomp
   
   jbtest <- c()
-  jbtest$statistic <- round(jarque.bera.test(fit$residuals)$statistic,3)
-  jbtest$p.value <- round(jarque.bera.test(fit$residuals)$p.value,3)
+  jbtest$statistic <- round(jarque.bera.test(fit$residuals)$statistic,4)
+  jbtest$p.value <- round(jarque.bera.test(fit$residuals)$p.value,4)
   jbtest <- cbind(jbtest)
   jbtest <- cbind(jbtest[[1]],jbtest[[2]])
-  colnames(jbtest) <- c('JB:statistics','p.value')
-  rownames(jbtest) <- decomp
+  colnames(jbtest) <- c('statistics','p.value')
+  rownames(jbtest) <- dep_var
   
   lm_test <- c()
-  lm_test$statistic <- round(bgtest(fit, type = "F", order = 4)$statistic,3)
-  lm_test$p.value <- round(bgtest(fit, type = "F", order = 4)$p.value,3)
+  lm_test$statistic <- round(bgtest(fit, type = "Chisq", order = order_l)$statistic,4)
+  lm_test$p.value <- round(bgtest(fit, type = "Chisq", order = order_l)$p.value,4)
   lm_test <- cbind(lm_test)
   lm_test <- cbind(lm_test[[1]],lm_test[[2]])
-  colnames(lm_test) <- c('BG:statistics','p.value')
-  rownames(lm_test) <- decomp
+  colnames(lm_test) <- c('statistics','p.value')
+  rownames(lm_test) <- dep_var
   
   arch <- c()
-  arch$statistic <- round(ArchTest(fit$residuals, q_order)$statistic,3)
-  arch$p.value <- round(ArchTest(fit$residuals, q_order)$p.value,3)
+  arch$statistic <- round(ArchTest(fit$residuals, order_l)$statistic,4)
+  arch$p.value <- round(ArchTest(fit$residuals, order_l)$p.value,4)
   arch <- cbind(arch)
   arch <- cbind(arch[[1]],arch[[2]])
-  colnames(arch) <- c('ARCH LM:statistics','p.value')
-  rownames(arch) <- decomp
+  colnames(arch) <- c('statistics','p.value')
+  rownames(arch) <- dep_var
   
-  diag <- cbind('lm test' = (lm_test),'arch test' = (arch), 'normality test' = (jbtest))
-  colnames(diag) <- c('lm test','pvalue', 'arch test','pvalue','normality test','pvalue')
+  reset_test <- c()
+  reset_test$statistic <- round(resettest(fit, power = 2, type = 'princomp')$statistic,4)
+  reset_test$p.value <- round(resettest(fit, power = 2, type = 'princomp')$p.value,4)
+  reset_test <- cbind(reset_test)
+  reset_test <- cbind(reset_test[[1]],reset_test[[2]])
+  colnames(reset_test) <- c('statistics','p.value')
+  rownames(reset_test) <- dep_var
+  
+  diag <- rbind(lm_test, arch, jbtest, reset_test)
+  rownames(diag) <- c('BG_SC_lm_test', 'LM_ARCH_test','normality_test', 'RESET_test')
   
   nobs <- nobs(fit)
   e <-  fit$residuals

@@ -8,34 +8,37 @@ Function to estimate Shin, Yu, and Greenwood-Nimmo (2014) nonlinear ARDL (NARDL)
 }
 \usage{
 nardl_uecm(x, decomp, control = NULL, c_q_order = c(2), 
-p_order = c(3), q_order = c(4), dep_var, graph_save = FALSE, case = 3)
+p_order = c(3), q_order = c(4), dep_var, order_l = 4, graph_save = FALSE, case = 3)
 }
 \arguments{
   \item{x}{
 A dataframe object.  S3 dataframe object not applicable.
 }
   \item{decomp}{
-A variable to be decomposed into positive (pos) and negative (neg)
+A character vector. The right hand side variable to be decomposed into positive (pos) and negative (neg)
 }
-  \item{control}{
-A character vector with one element serving as the second variable single control variable. The default is NULL, but when control variable is specified.
+\item{control}{
+A character vector with one element serving as the second variable in the right hand side of the equation. The default is NULL.
 }
-  \item{c_q_order}{
-Lag order for the control. the default value is c(2) and only applicable when control is specified.
+\item{c_q_order}{
+Lag order for 'control'. the default value is c(2) and only applicable when control is specified.
 }
-  \item{p_order}{
-Number of lags for dependent variable (dep_var).
+\item{p_order}{
+Positive interger. Number of lags for dependent variable (dep_var).
 }
-  \item{q_order}{
-Short-run lags for each positive and negative decomposed variable. In case the LM test null hypothesis of no serial correlation is rejected, consider increasing the lags, in particular, the p_order or both p_order and q_order lags until the null hypothesis is accepted.
+\item{q_order}{
+Positive interger. Short-run lags for the decomposed variables. In case the LM test null hypothesis of no serial correlation is rejected, consider increasing the lags, in particular, the p_order or both p_order and q_order lags until the null hypothesis is accepted.
 }
-  \item{dep_var}{
-Character vector which contain the dependent variable.
+\item{dep_var}{
+Character vector. The dependent variable.
 }
-  \item{graph_save}{
+\item{order_l}{
+Positive integer. lag order for the serial correlation, and heteroscedasticity test
+}
+\item{graph_save}{
 Logical (default is FALSE). If TRUE, stability plot is displayed.}
-  \item{case}{
-A numerical vector of either 1, 2 3, 4 or 5. The default value is 3 - restricted constant (no intercept), no trend. See details for more information.
+\item{case}{
+A numerical vector that can take a value between 1 to 5. The default value is 3 - restricted constant (no intercept), no trend. See details for more information.
 }
 }
 \value{
@@ -46,7 +49,8 @@ A numerical vector of either 1, 2 3, 4 or 5. The default value is 3 - restricted
 \item{Longrun_relation }{The estimated longrun relations}
 \item{Longrun_asymmetric_test }{This contains the asymmetric test, with the null hypothesis of longrun coefficients of the positive decomposed variable equals to the coefficient of negative decomposed variable.}
 \item{Shortrun_asymmetric_test }{This contains the asymmetric test, with the null hypothesis the sum of the coefficients of all the short run positive decomposed variable equals to the sum of the coefficients of the short-run negative decomposed variable.}
-\item{diagnostics test}{This presents the Breusch-Godfrey test for higher-order serial correlation with null hypothesis of no serial correlation, the Autoregressive Conditional Heteroscedasticity (ARCH) LM-test with the null hypothesis of no ARCH effect and the Jarque-Bera normality test with null hypothesis of normality. This ARCH LM function is derived from Zaghdoudi (2018)}
+\item{diagnostics test}{
+The diagnostic tests indicate the Breusch-Godfrey test for higher-order serial correlation (BG_SC_lm_test). The Engle (1982) test for conditional heteroscedasticity (LM_ARCH_test). The test for non-normality is that of Jarque and Bera (1980). The RESET null hypothesis adopted implies - including the 2nd - degree terms improve the fit (over the model specified). This ARCH LM function is derived from Zaghdoudi (2018)}
 }
 \references{
 Jordan S, Philips A (2020). _dynamac: Dynamic Simulation and Testing for Single-Equation
