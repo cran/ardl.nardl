@@ -1,15 +1,13 @@
-gets_nardl_uecm <- function(x, 
-                            decomp, 
-                            dep_var, 
-                            control = NULL, 
-                            c_q_order = c(2), 
-                            p_order = c(3), 
-                            q_order = c(4),
-                            gets_pval = 0.1, 
-                            order_l = 4,
-                            F_HC = FALSE,
-                            graph_save = FALSE, 
-                            case = 3){
+nardl_auto_case = function (x, 
+                             decomp, 
+                             dep_var, 
+                             control = NULL, 
+                             c_q_order = c(2), 
+                             p_order = c(3), 
+                             q_order,
+                             gets_pval = 0.1, 
+                             order_l = order_l,
+                             graph_save = FALSE) {
 {
   if (!is.null(control) == T) {
     x <- na.omit(x)
@@ -52,8 +50,8 @@ gets_nardl_uecm <- function(x,
     lagh <- na.omit(lagh)
     trend <- seq_along(dy)
     k <- ncol(x) + ncol(h)
-    rhs <- cbind(dy, lagy, lxp, lxn, lagh, ldy, ldxp, ldxn, 
-                 ldh, trend)
+    rhs <- cbind(dy, lagy, lxp, lxn, lagh, ldy, ldxp, 
+                 ldxn, ldh, trend)
     colnames(rhs)
     rhs <- list(data = data.frame(rhs), k = k)
     y_p_order <- lagm(as.matrix(y), p_order)
@@ -84,14 +82,15 @@ gets_nardl_uecm <- function(x,
     colnames(y) <- dep_var
     h <- data.frame(h[-1])
     colnames(h) <- control
-    nardl_data <- data.frame(cbind(y, y_p_order, xp, xp_q_order, 
-                                   xn, xn_q_order, h, h_c_q_order, trend))
+    nardl_data <- data.frame(cbind(y, y_p_order, xp, 
+                                   xp_q_order, xn, xn_q_order, h, h_c_q_order, 
+                                   trend))
     nardl_case <- names(nardl_data)
     lagx <- lagm(as.matrix(x), 1)
     lagx1 <- data.frame(lagx[-1])
     colnames(lagx1) <- colnames(lagx)
-    rhs_lng_sym <- cbind(dy, lagy, lagx1, lagh, ldy, ldxp, 
-                         ldxn, ldh, trend)
+    rhs_lng_sym <- cbind(dy, lagy, lagx1, lagh, ldy, 
+                         ldxp, ldxn, ldh, trend)
     dx_qlag <- lagm(as.matrix(dx), q_order)
     rhs_shr_sym <- cbind.data.frame(dy, lagy, lxp, lxn, 
                                     lagh, ldy, dx_qlag, ldh, trend)
@@ -130,7 +129,8 @@ gets_nardl_uecm <- function(x,
     ldxn <- lagm(as.matrix(dxn), q_order)
     lagy <- na.omit(lagy)
     trend <- seq_along(dy)
-    rhs <- cbind(dy, lagy, lxp, lxn, ldy, ldxp, ldxn, trend)
+    rhs <- cbind(dy, lagy, lxp, lxn, ldy, ldxp, ldxn, 
+                 trend)
     rhs <- list(data = data.frame(rhs), k = k)
     y_p_order <- lagm(as.matrix(y), p_order)
     colnames(y_p_order) <- gsub(x = colnames(y_p_order), 
@@ -147,14 +147,14 @@ gets_nardl_uecm <- function(x,
     }
     y <- data.frame(y[-1])
     colnames(y) <- dep_var
-    nardl_data <- data.frame(cbind(y, y_p_order, xp, xp_q_order, 
-                                   xn, xn_q_order, trend))
+    nardl_data <- data.frame(cbind(y, y_p_order, xp, 
+                                   xp_q_order, xn, xn_q_order, trend))
     nardl_case <- names(nardl_data)
     lagx <- lagm(as.matrix(x), 1)
     lagx1 <- data.frame(lagx[-1])
     colnames(lagx1) <- colnames(lagx)
-    rhs_lng_sym <- cbind(dy, lagy, lagx1, ldy, ldxp, ldxn, 
-                         trend)
+    rhs_lng_sym <- cbind(dy, lagy, lagx1, ldy, ldxp, 
+                         ldxn, trend)
     dx_qlag <- lagm(as.matrix(dx), q_order)
     rhs_shr_sym <- cbind.data.frame(dy, lagy, lxp, lxn, 
                                     ldy, dx_qlag, trend)
@@ -162,83 +162,50 @@ gets_nardl_uecm <- function(x,
 }
 data <- rhs$data
 case_ <- names(data)
-{
-  if (case == 1) 
-    nardl_fmla <- as.formula(paste(paste0(dep_var, " ~ "), 
-                                   paste(paste(nardl_case[-length(nardl_case)][-1], 
-                                               collapse = "+"), "-1")))
-  if (case == 3) 
-    nardl_fmla <- as.formula(paste(paste0(dep_var, " ~ "), 
-                                   paste(nardl_case[-length(nardl_case)][-1], collapse = "+")))
-  if (case == 5) 
-    nardl_fmla <- as.formula(paste(paste0(dep_var, " ~ "), 
-                                   paste(nardl_case[-1], collapse = "+")))
-  if (case == 2) 
-    nardl_fmla <- as.formula(paste(paste0(dep_var, " ~ "), 
-                                   paste(nardl_case[-length(nardl_case)][-1], collapse = "+")))
-  if (case == 4) 
-    nardl_fmla <- as.formula(paste(paste0(dep_var, " ~ "), 
-                                   paste(nardl_case[-1], collapse = "+")))
-}
-{
-  if (case == 1) 
-    ecm_fmla <- as.formula(paste(paste0("D.", dep_var, 
-                                        " ~ "), paste(paste(case_[-length(case_)][-1], 
-                                                            collapse = "+"), "-1")))
-  if (case == 3) 
-    ecm_fmla <- as.formula(paste(paste0("D.", dep_var, 
-                                        " ~ "), paste(case_[-length(case_)][-1], collapse = "+")))
-  if (case == 5) 
-    ecm_fmla <- as.formula(paste(paste0("D.", dep_var, 
-                                        " ~ "), paste(case_[-1], collapse = "+")))
-  if (case == 2) 
-    ecm_fmla <- as.formula(paste(paste0("D.", dep_var, 
-                                        " ~ "), paste(case_[-length(case_)][-1], collapse = "+")))
-  if (case == 4) 
-    ecm_fmla <- as.formula(paste(paste0("D.", dep_var, 
-                                        " ~ "), paste(case_[-1], collapse = "+")))
-}
-
+nardl_fmla <- as.formula(paste(paste0(dep_var,' ~ '), 
+                               paste(nardl_case[-1], collapse= "+")))
 nardl_fit_case_ <- lm(nardl_fmla, data = nardl_data, na.action = na.exclude)
 
-nardl_gets_fit <- gets.lm(nardl_fit_case_,
-                          wald.pval=gets_pval,
-                          include.1cut = T,print.searchinfo = F)
-
-
+nardl_gets_fit <- gets.lm(nardl_fit_case_, wald.pval = gets_pval, 
+                          include.1cut = T, print.searchinfo = F)
+ecm_fmla <- as.formula(paste(paste0('D.', dep_var,' ~ '), 
+                             paste(case_[-1], collapse= "+")))
 fit_case_ <- lm(ecm_fmla, data = data, na.action = na.exclude)
 
 {
-  if(is.null(control) == FALSE){
-    (lrname <- c(paste0(decomp,'_pos_1'), paste0(control,'_1'), paste0(decomp,'_neg_1')))
+  if (is.null(control) == FALSE) {
+    lrname <- c(paste0(decomp, "_pos_1"), paste0(control, 
+                                                  "_1"), paste0(decomp, "_neg_1"))
   }
-  else{
-    (lrname <- c(paste0(decomp,'_pos_1'), paste0(decomp,'_neg_1')))
+  else {
+    lrname <- c(paste0(decomp, "_pos_1"), paste0(decomp, 
+                                                  "_neg_1"))
   }
 }
 
+ecm_gets_fit <- gets.lm(fit_case_, wald.pval = gets_pval, 
+                        keep = c(2:(1+1+length(lrname))), 
+                        include.1cut = T, print.searchinfo = F)
+ecm_gets_summ <- summary(ecm_gets_fit)
+case_6 <- ifelse(c("(Intercept)",'trend') %in% rownames(ecm_gets_summ$coefficients), 1,0)
+case = c()
 {
-  if("(Intercept)" %in% names(fit_case_$coefficients) == TRUE){
-    keep_val <- c(1:(1+1+length(lrname)))
+  if(sum(case_6) == 0){
+    case = 1
   }
-  else{
-    keep_val <- c(1:(1+length(lrname)))
+  if(sum(case_6) == 2){
+    case = c(4,5)
+  }
+  
+  if(sum(case_6) == 1){
+    if(c("(Intercept)") %in% rownames(ecm_gets_summ$coefficients))
+      case <- c(2,3)
+    else if(c("trend") %in% rownames(ecm_gets_summ$coefficients))
+      stop('
+    You final model has a trend and no intercept. You should have a model with no trend and intercept; with intercept and no trend or both intercept and trend. 
+    Consider adjusting the values for either the p_order, q_order or both in other to examine the various case - 1 to 5. Alternatively, you may consider adopting gets_nardl_uecm()')
   }
 }
-
-{
-  if("trend" %in% names(fit_case_$coefficients) == TRUE){
-    keep_val <- c(keep_val,length(fit_case_$coefficients))
-  }
-  else{
-    keep_val <- keep_val
-  }
-}
-
-ecm_gets_fit <- gets.lm(fit_case_,
-                        wald.pval=gets_pval,
-                        keep = keep_val,
-                        include.1cut = T,print.searchinfo = F)
 k <- rhs$k
 summary_fit <- summary(ecm_gets_fit)
 coeff <- summary_fit$coefficients
@@ -246,6 +213,73 @@ nlvars <- length(coeff[, 1])
 b_pos_neg <- c("_pos", "_neg")
 bp <- str_subset(rownames(coeff), b_pos_neg[1])[1]
 bn <- str_subset(rownames(coeff), b_pos_neg[2])[1]
+
+fstat_name = NULL
+{
+  if(length(case) < 2){
+    if (!is.null(control) == T) {
+      if (case == 1 | case == 3 | case == 5) {
+        fstat_name <- c(paste0(dep_var, "_1"), bn, bp, 
+                        paste0(control, "_1"))
+      }
+      else if (case == 2) {
+        fstat_name <- c("(Intercept)", paste0(dep_var, 
+                                              "_1"), bn, bp, paste0(control, "_1"))
+      }
+      else {
+        fstat_name <- c("trend", paste0(dep_var, "_1"), 
+                        bn, bp, paste0(control, "_1"))
+      }
+    }
+    else {
+      if (case == 1 | case == 3 | case == 5) {
+        fstat_name <- c(paste0(dep_var, "_1"), bn, bp)
+      }
+      else if (case == 2) {
+        fstat_name <- c("(Intercept)", paste0(dep_var, 
+                                              "_1"), bn, bp)
+      }
+      else {
+        fstat_name <- c("trend", paste0(dep_var, "_1"), 
+                        bn, bp)
+      }
+    }
+  }
+  if(length(case) == 2){
+    for (i in 1:2) {
+      if (!is.null(control) == T) {
+        if (case[[i]] == 1 | case[[i]] == 3 | case[[i]] == 5) {
+          fstat_name[[i]] <- c(paste0(dep_var, "_1"), bn, bp, 
+                               paste0(control, "_1"))
+        }
+        else if (case[[i]] == 2) {
+          fstat_name[[i]] <- c("(Intercept)", paste0(dep_var, 
+                                                     "_1"), bn, bp, paste0(control, "_1"))
+        }
+        else {
+          fstat_name[[i]] <- c("trend", paste0(dep_var, "_1"), 
+                               bn, bp, paste0(control, "_1"))
+        }
+      }
+      else {
+        if (case[[i]] == 1 | case[[i]] == 3 | case[[i]] == 5) {
+          fstat_name[[i]] <- c(paste0(dep_var, "_1"), bn, bp)
+        }
+        else if (case[[i]] == 2) {
+          fstat_name[[i]] <- c("(Intercept)", paste0(dep_var, 
+                                                     "_1"), bn, bp)
+        }
+        else {
+          fstat_name[[i]] <- c("trend", paste0(dep_var, "_1"), 
+                               bn, bp)
+        }
+      }
+    }
+    fstat_name
+    names(fstat_name) <- paste('Case', case)
+  }
+}
+
 {
   if ("(Intercept)" %in% rownames(coeff) == TRUE) {
     lvars <- coeff[3:nlvars, 1]
@@ -256,6 +290,7 @@ bn <- str_subset(rownames(coeff), b_pos_neg[2])[1]
     coof <- -lvars/coeff[[1]]
   }
 }
+
 seldata <- data.matrix(coeff)
 cof <- matrix(coof, length(lvars), 1)
 {
@@ -299,51 +334,31 @@ colnames(lres) <- c("Estimate", "Std. Error", "t value",
 }
 tstat <- coef(summary(ecm_gets_fit))[paste0(dep_var, "_1"), 
                                      3]
+wld_test <- c()
+fstat <- c()
 {
-  if (!is.null(control) == T) {
-    if (case == 1 | case == 3 | case == 5) {
-      fstat_name <- c(paste0(dep_var, "_1"), bn, bp, 
-                      paste0(control, "_1"))
-    }
-    else if (case == 2) {
-      fstat_name <- c("(Intercept)", paste0(dep_var, 
-                                            "_1"), bn, bp, paste0(control, "_1"))
-    }
-    else {
-      fstat_name <- c("trend", paste0(dep_var, "_1"), 
-                      bn, bp, paste0(control, "_1"))
-    }
+  if (length(fstat_name) > 2){
+    wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = fstat_name, 
+                                  verbose = F, rhs = rep(0, length(fstat_name)), test = "F")
+    fstat <- cbind(Fstat = wld_test$F[2], Pval = wld_test$`Pr(>F)`[2], df = wld_test$Df[2])
+    rownames(fstat) <- c('wald_test')
+    fstat
   }
-  else {
-    if (case == 1 | case == 3 | case == 5) {
-      fstat_name <- c(paste0(dep_var, "_1"), bn, bp)
+  if (length(fstat_name) == 2){
+    for(i in 1:2){
+      wld_test[[i]] <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = fstat_name[[i]], 
+                                        verbose = F, rhs = rep(0, length(fstat_name[[i]])), test = "F")
+      fstat[[i]] <- cbind(Fstat = wld_test[[i]]$F[2], Pval = wld_test[[i]]$`Pr(>F)`[2])
+      rownames(fstat[[i]]) <- c('wald_test')
     }
-    else if (case == 2) {
-      fstat_name <- c("(Intercept)", paste0(dep_var, 
-                                            "_1"), bn, bp)
-    }
-    else {
-      fstat_name <- c("trend", paste0(dep_var, "_1"), 
-                      bn, bp)
-    }
+    names(fstat) <- paste('Case', case)
   }
 }
 
-wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = fstat_name, verbose = F,
-                              rhs = rep(0,length(fstat_name)), test = "F")
-wld_test_ <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = fstat_name, verbose = F,
-                               rhs = rep(0,length(fstat_name)), test = "F",vcov = vcovHC)
-lmwld <- cbind(Fstat = wld_test$F[2], Pval = wld_test$`Pr(>F)`[2], df = wld_test$Df[2])
-lmwld_ <- cbind(Fstat = wld_test_$F[2], Pval = wld_test_$`Pr(>F)`[2], df = wld_test_$Df[2])
-
-fstat <- rbind(lmwld,lmwld_)
-rownames(fstat) <- c('wald_test','robust_wald_test')
 ecm_gets_summ <- summary(ecm_gets_fit)
-ecm_diag_gets <- round(diag <- diagnostics(ecm_gets_summ,
-                                            ar.LjungB=c(floor(max(q_order)/2), 0.025),
-                                            arch.LjungB = NULL, 
-                                            normality.JarqueB = NULL),4)
-
+ecm_diag_gets <- round(diag <- diagnostics(ecm_gets_summ, 
+                                           ar.LjungB = c(floor(max(q_order)/2), 0.025), arch.LjungB = NULL, 
+                                           normality.JarqueB = NULL), 3)
 jbtest <- c()
 jbtest$statistic <- round(jarque.bera.test(ecm_gets_fit$residuals)$statistic,4)
 jbtest$p.value <- round(jarque.bera.test(ecm_gets_fit$residuals)$p.value,4)
@@ -375,18 +390,17 @@ reset_test <- cbind(reset_test)
 reset_test <- cbind(reset_test[[1]],reset_test[[2]])
 colnames(reset_test) <- c('statistics','p.value')
 rownames(reset_test) <- dep_var
-
 diag <- rbind(lm_test, arch, jbtest, reset_test)
-rownames(diag) <- c('BG_SC_lm_test', 'LM_ARCH_test','normality_test', 'RESET_test')
-
+rownames(diag) <- c("BG_SC_lm_test", "LM_ARCH_test", "normality_test", 
+                    "RESET_test")
 coof_lres <- coof[c(bn, bp)]
 vcc1 <- vcc[c(names(coof_lres[1]), names(coof_lres[2])), 
             c(names(coof_lres[1]), names(coof_lres[2]))]
-lbeta <- coeff[c(names(coof_lres[1]), names(coof_lres[2])), 1]
-
+lbeta <- coeff[c(names(coof_lres[1]), names(coof_lres[2])), 
+               1]
 ll2 <- c(paste(names(coof_lres[1]), "=", names(coof_lres[2])))
-
-wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = ll2, verbose = F,test = "F")
+wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = ll2, 
+                             verbose = F, test = "F")
 lr_asym_test <- cbind(Fstat = wld_test$F[2], Pval = wld_test$`Pr(>F)`[2])
 rownames(lr_asym_test) <- decomp
 
@@ -454,48 +468,46 @@ stab_plot <- function(graph_save) {
   on.exit(par(oldpar))
 }
 stab_plot(graph_save)
+
+bounds_F <- c()
 {
-  if(F_HC == T)
-    if(case == 1| case == 3 | case == 5){
-      if(diag[2,2] < 0.05)
-        bounds_F <- dynamac_pkg_bounds_test(case=case,fstat=fstat[2,1],tstat = tstat, obs=nobs,k=k)
-      else if (diag[2,2] > 0.05)
+  if (length(case) < 2){
+    {
+      if(case == 1| case == 3 | case == 5){
         bounds_F <- dynamac_pkg_bounds_test(case=case,fstat=fstat[1,1],tstat = tstat, obs=nobs,k=k)
+      }
+      else if(case == 2){
+        bounds_F <- dynamac_pkg_bounds_test(case=case,fstat=fstat[1,1],tstat = NULL, obs=nobs,k=k)
+      }
+      else{
+        bounds_F <- dynamac_pkg_bounds_test(case=case,fstat=fstat[1,1],tstat = NULL, obs=nobs,k=k)
+      }
     }
-  else if(case == 2){
-    if(diag[2,2] < 0.05)
-      bounds_F <- dynamac_pkg_bounds_test(case=case,fstat=fstat[2,1],tstat = NULL, obs=nobs,k=k)
-    else if (diag[2,2] > 0.05)
-      bounds_F <- dynamac_pkg_bounds_test(case=case,fstat=fstat[1,1],tstat = NULL, obs=nobs,k=k)
   }
-  else{
-    if(diag[2,2] < 0.05)
-      bounds_F <- dynamac_pkg_bounds_test(case=case,fstat=fstat[2,1],tstat = NULL, obs=nobs,k=k)
-    else if (diag[2,2] > 0.05)
-      bounds_F <- dynamac_pkg_bounds_test(case=case,fstat=fstat[1,1],tstat = NULL, obs=nobs,k=k)
-  }
-  else{
-    if (case == 1 | case == 3 | case == 5) {
-      bounds_F <- dynamac_pkg_bounds_test(case = case, 
-                                          fstat = fstat[1,1], tstat = tstat, obs = nobs, k = k)
+  
+  if(length(case) == 2){
+    for (i in 1:2) {
+      if(case[[i]] == 1| case[[i]] == 3 | case[[i]] == 5){
+        bounds_F[[i]] <- dynamac_pkg_bounds_test(case=case[[i]],fstat=fstat[[i]][1,1],tstat = tstat, obs=nobs,k=k)
+      }
+      else if(case[[i]] == 2){
+        bounds_F[[i]] <- dynamac_pkg_bounds_test(case=case[[i]],fstat=fstat[[i]][1,1],tstat = NULL, obs=nobs,k=k)
+      }
+      else{
+        bounds_F[[i]] <- dynamac_pkg_bounds_test(case=case[[i]],fstat=fstat[[i]][1,1],tstat = NULL, obs=nobs,k=k)
+      }
     }
-    else if (case == 2) {
-      bounds_F <- dynamac_pkg_bounds_test(case = case, 
-                                          fstat = fstat[1,1], tstat = NULL, obs = nobs, k = k)
-    }
-    else {
-      bounds_F <- dynamac_pkg_bounds_test(case = case, 
-                                          fstat = fstat[1,1], tstat = NULL, obs = nobs, k = k)
-    }
+    names(bounds_F) <- paste('Case', case)
   }
 }
-gets_NARDL <- list('Parsimonious_NARDL_fit' = nardl_gets_fit, 
-                   'Parsimonious_ECM_fit' = ecm_gets_fit, 
-                   'Summary_uecm_fit' = ecm_gets_summ,
-                   'ecm_diagnostics_test' = diag,
-                   'longrun_asym' = lr_asym_test, 
-                   'Shortrun_asym' = sr_asym_test,
-                   'cointegration'= bounds_F,
-                   'Longrun_relation' = lres)
+
+gets_NARDL <- list(Parsimonious_NARDL_fit = nardl_gets_fit, 
+                   Parsimonious_ECM_fit = ecm_gets_fit, 
+                   Summary_uecm_fit = ecm_gets_summ, 
+                   ecm_diagnostics_test = diag, 
+                   longrun_asym = lr_asym_test, 
+                   Shortrun_asym = sr_asym_test, 
+                   cointegration = bounds_F, 
+                   Longrun_relation = lres)
 return(gets_NARDL)
 }

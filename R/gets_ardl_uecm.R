@@ -1,7 +1,6 @@
 gets_ardl_uecm <- function(x, dep_var, expl_var, p_order = c(2), 
                     q_order = c(3), gets_pval = 0.1, case = 3,
                     F_HC = FALSE, order_l = 5, graph_save = FALSE){
-{
 df <- c()
 x <- na.omit(x)
 df$y <- x[,dep_var]
@@ -120,29 +119,8 @@ ardl_case <- names(ardl_data)
 
 ardl_fit_case_ <- lm(ardl_fmla, data = ardl_data, na.action = na.exclude)
 
-{
-  if("(Intercept)" %in% names(ardl_fit_case_$coefficients) == TRUE){
-    keep_val <- c(1:(1+1+length(expl_var)))
-  }
-  else{
-    keep_val <- c(1:(1+length(expl_var)))
-  }
-}
-
-{
-  if("trend" %in% names(ardl_fit_case_$coefficients) == TRUE){
-    keep_val <- c(keep_val,length(ardl_fit_case_$coefficients))
-  }
-  else{
-    keep_val <- keep_val
-  }
-}
-}
-
 ardl_gets_fit <- gets.lm(ardl_fit_case_,
-                         #t.pval=0.01,
                          wald.pval=gets_pval,
-                         keep = keep_val,
                          include.1cut = T,print.searchinfo = F)
 
 ecm_fit_case_ <- lm(fmla, data = data, na.action = na.exclude)
@@ -250,32 +228,32 @@ ecm_diag_gets <- round(diag <- diagnostics(ecm_gets_summ,
 
 
 jbtest <- c()
-jbtest$statistic <- round(jarque.bera.test(ecm_gets_fit$residuals)$statistic,2)
-jbtest$p.value <- round(jarque.bera.test(ecm_gets_fit$residuals)$p.value,2)
+jbtest$statistic <- round(jarque.bera.test(ecm_gets_fit$residuals)$statistic,4)
+jbtest$p.value <- round(jarque.bera.test(ecm_gets_fit$residuals)$p.value,4)
 jbtest <- cbind(jbtest)
 jbtest <- cbind(jbtest[[1]],jbtest[[2]])
 colnames(jbtest) <- c('statistics','p.value')
 rownames(jbtest) <- dep_var
 
 lm_test <- c()
-lm_test$statistic <- round(bgtest(ecm_gets_fit, type = "Chisq", order = order_l)$statistic,2)
-lm_test$p.value <- round(bgtest(ecm_gets_fit, type = "Chisq", order = order_l)$p.value,2)
+lm_test$statistic <- round(bgtest(ecm_gets_fit, type = "Chisq", order = order_l)$statistic,4)
+lm_test$p.value <- round(bgtest(ecm_gets_fit, type = "Chisq", order = order_l)$p.value,4)
 lm_test <- cbind(lm_test)
 lm_test <- cbind(lm_test[[1]],lm_test[[2]])
 colnames(lm_test) <- c('statistics','p.value')
 rownames(lm_test) <- dep_var
 
 arch <- c()
-arch$statistic <- round(ArchTest(ecm_gets_fit$residuals, order_l)$statistic,2)
-arch$p.value <- round(ArchTest(ecm_gets_fit$residuals, order_l)$p.value,2)
+arch$statistic <- round(ArchTest(ecm_gets_fit$residuals, order_l)$statistic,4)
+arch$p.value <- round(ArchTest(ecm_gets_fit$residuals, order_l)$p.value,4)
 arch <- cbind(arch)
 arch <- cbind(arch[[1]],arch[[2]])
 colnames(arch) <- c('statistics','p.value')
 rownames(arch) <- dep_var
 
 reset_test <- c()
-reset_test$statistic <- round(resettest(ecm_gets_fit, power = 2, type = 'princomp')$statistic,2)
-reset_test$p.value <- round(resettest(ecm_gets_fit, power = 2, type = 'princomp')$p.value,2)
+reset_test$statistic <- round(resettest(ecm_gets_fit, power = 2, type = 'princomp')$statistic,4)
+reset_test$p.value <- round(resettest(ecm_gets_fit, power = 2, type = 'princomp')$p.value,4)
 reset_test <- cbind(reset_test)
 reset_test <- cbind(reset_test[[1]],reset_test[[2]])
 colnames(reset_test) <- c('statistics','p.value')

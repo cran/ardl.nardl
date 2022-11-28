@@ -32,7 +32,6 @@ out1 <- gets_ardl_uecm(x = expectation,
                         graph_save = FALSE,
                         F_HC = FALSE,
                         order_l = 7)
-out1
 
 out2 <- gets_nardl_uecm(x = expectation,
                          decomp = 'food_inf',
@@ -45,7 +44,28 @@ out2 <- gets_nardl_uecm(x = expectation,
                          graph_save = FALSE,
                          case = 5, 
                          F_HC = FALSE)
-out2
+
+OUT3 <- auto_case_ardl(x = expectation,
+               dep_var = 'n12m_inf_exp', 
+               expl_var = c('food_inf',"hawkish","dovish"),
+               p_order = 2,
+               q_order = c(4,4,4),
+               gets_pval = 0.05,
+               graph_save = FALSE, 
+               order_l = 7)
+OUT3 
+               
+OUT4 <- nardl_auto_case(x = fuel_price,
+                      decomp =  'wti',
+                      dep_var = 'fpp',
+                      control = 'bdc',
+                      c_q_order = c(5), 
+                      p_order = c(5),
+                      q_order = c(6),
+                      gets_pval = 0.1,
+                      order_l = 4,
+                      graph_save = FALSE)
+OUT4
 
 uecm_case3 <- ardl_uecm(x = fuel_price,
                             dep_var = c('fpp'),

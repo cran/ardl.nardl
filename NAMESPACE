@@ -1,6 +1,6 @@
 export("ardl_uecm",
        "dynamac_pkg_bounds_test",
-       "gets_ardl_uecm", "gets_nardl_uecm",
+       "gets_ardl_uecm", "gets_nardl_uecm", "auto_case_ardl","nardl_auto_case",
        "lagm", "nardl_uecm",
        "nardl_uecm_sym", "output_ren")
 importFrom("graphics", "par")
