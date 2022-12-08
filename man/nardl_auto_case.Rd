@@ -34,7 +34,7 @@ An integer. Lag differenced adopted for the differenced response variable
   An integer. Lag differenced adopted for the differenced explanatory variable(s)
 }
   \item{gets_pval}{
-The p- value for adopted as criteria for eliminating non-significant variable in the course of obtaining the best model based on the Schwarz information criteria.
+The p- value which served as criteria for eliminating non-significant variable in the course of obtaining the best model based on the Schwarz information criteria.
 }
   \item{order_l}{
 Integer. Needed for the autocorrelation and heteroscedasticity test 

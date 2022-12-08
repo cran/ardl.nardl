@@ -1,3 +1,5 @@
+Version 1.2.1 
+o Debian check error re-submission
 
 Version 1.2.0 (submitted on 28 Nov. 2022)
 o Added new functions - auto_case_ardl() and nardl_auto_case() for obtaining the best specification via the general-to-specific approach

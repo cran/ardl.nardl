@@ -2,23 +2,25 @@ Package: ardl.nardl
 Type: Package
 Title: Linear and Nonlinear Autoregressive Distributed Lag Models:
         General-to-Specific Approach
-Version: 1.2.0
-Date: 2022-11-28
+Version: 1.2.1
+Date: 2022-12-08
 Authors@R: 
       c(person("Eric I.", "Otoakhia", role = c("aut", "cre"), email = "otoakhiai@gmail.com"))
-Description: Estimate the linear and nonlinear autoregressive distributed lag (ARDL & NARDL) models and the corresponding error correction models, and test for longrun and short-run asymmetric. The general-to-specific approach is also available in estimating the ARDL and NARDL models. The Pesaran, Shin & Smith (2001) (<doi:10.1002/jae.616>) bounds test for level relationships is also provided. The 'ardl.nardl' package also performs short-run and longrun symmetric restrictions available at Shin et al. (2014) <doi:10.1007/978-1-4899-8008-3_9> and their corresponding tests.
+Description: Estimate the linear and nonlinear autoregressive distributed lag (ARDL & NARDL) models and the corresponding error correction models, and test for 
+            longrun and short-run asymmetric. The general-to-specific approach is also available in estimating the ARDL and NARDL models. 
+            The Pesaran, Shin & Smith (2001) (<doi:10.1002/jae.616>) bounds test for level relationships is also provided. 
+            The 'ardl.nardl' package also performs short-run and longrun symmetric restrictions available at 
+            Shin et al. (2014) <doi:10.1007/978-1-4899-8008-3_9> and their corresponding tests.
 Maintainer: Eric I. Otoakhia <otoakhiai@gmail.com>
 Author: Eric I. Otoakhia [aut, cre]
 Contact: <otoakhiai@gmail.com>
 License: GPL (>= 2)
 Depends: R(>= 3.5.0)
 Suggests: dynamac(>= 0.1.11)
-Imports: graphics(>= 4.2.1), gets (>= 0.37), dplyr(>= 1.0.10), rlist(>=
-        0.4.6.2), nardl(>= 0.1.6), stats(>= 4.2.1), car(>= 3.1-1),
-        lmtest(>= 0.9-38), texreg(>= 1.38.6), stringr(>= 1.4.0),
-        tseries(>= 0.10-51), sandwich(>= 2.5-1)
+Imports: gets, dplyr, rlist, nardl, car, lmtest, texreg, stringr,
+        tseries, sandwich
 LazyData: true
-Packaged: 2022-11-28 14:30:06 UTC; dell
+Packaged: 2022-12-08 17:07:44 UTC; dell
 NeedsCompilation: no
 Repository: CRAN
-Date/Publication: 2022-11-28 22:40:06 UTC
+Date/Publication: 2022-12-08 23:30:06 UTC
