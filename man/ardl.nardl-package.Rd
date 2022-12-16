@@ -20,9 +20,10 @@ Shin, Y., Yu, B., & Greenwood-Nimmo, M. (2014). Modelling Asymmetric Cointegrati
 }
 \keyword{package}
 \examples{
+\dontrun{
 data(fuel_price)
 data(expectation)
-out1 <- gets_ardl_uecm(x = expectation,
+ out1 <- gets_ardl_uecm(x = expectation,
                         dep_var = c('nq_inf_exp'), 
                         expl_var = c('food_inf','nethawkish'),
                         p_order = c(4), 
@@ -32,18 +33,20 @@ out1 <- gets_ardl_uecm(x = expectation,
                         graph_save = FALSE,
                         F_HC = FALSE,
                         order_l = 7)
+ out1 
 
-out2 <- gets_nardl_uecm(x = expectation,
+ out2 <- gets_nardl_uecm(x = expectation,
                          decomp = 'food_inf',
                          dep_var = 'nq_inf_exp',
                          control = 'nethawkish',
                          c_q_order = c(3),
                          p_order = c(3),
                          q_order = c(3),
-                         gets_pval = 0.1,
+                        gets_pval = 0.1,
                          graph_save = FALSE,
                          case = 5, 
                          F_HC = FALSE)
+ out2
 
 OUT3 <- auto_case_ardl(x = expectation,
                dep_var = 'n12m_inf_exp', 
@@ -109,4 +112,5 @@ out_lrsr <- nardl_uecm_sym(x = syg_data,
                            graph_save = FALSE, 
                            case = 3)
 out_lrsr
+}
 }

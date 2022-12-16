@@ -13,7 +13,7 @@ nardl_auto_case(x, decomp, dep_var, control = NULL, c_q_order = c(2),
 }
 \arguments{
   \item{x}{
-%%     ~~Describe \code{x} here~~
+Dataframe
 }
   \item{decomp}{
 A character vector. The variable to be decomposed to positive (pos) and negative (neg) variable.
@@ -73,8 +73,9 @@ Do not differenced the variables to be adopted in this function and all other fu
 Sucarrat, G. User-Specified General-to-Specific (GETS) and Indicator Saturation (ISAT) Methods. 28th September 2021. https://mirror.epn.edu.ec/CRAN/web/packages/gets/vignettes/user-defined-gets-and-isat.pdf
 }
 \examples{
-data("fuel_price")
-nardl_auto_case(x = fuel_price,
+\dontrun{
+ data("fuel_price")
+ out1 <- nardl_auto_case(x = fuel_price,
                 decomp =  'wti',
                 dep_var = 'fpp',
                 control = 'bdc',
@@ -84,8 +85,9 @@ nardl_auto_case(x = fuel_price,
                 gets_pval = 0.1,
                 order_l = 4,
                 graph_save = FALSE)
+ out1
 
-nardl_auto_case(x = fuel_price,
+ out2 <- nardl_auto_case(x = fuel_price,
                 decomp =  'wti',
                 dep_var = 'fpp',
                 control = NULL,
@@ -95,6 +97,6 @@ nardl_auto_case(x = fuel_price,
                 gets_pval = 0.02,
                 order_l = 4,
                 graph_save = FALSE)
-
-
+ out2
+}
 }

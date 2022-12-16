@@ -268,15 +268,15 @@ auto_case_ardl <- function(x, dep_var, expl_var, p_order, q_order,
   
   nobs <- nobs(ecm_gets_fit)
   stab_plot <- function(graph_save){
-    oldpar <- par(no.readonly = TRUE)
     if(graph_save == TRUE){
+      oldpar <- par(no.readonly = TRUE)
       e <-  ecm_gets_fit$residuals
       n <-  nobs
       par(mfrow = c(1,2))
       cusum(e=e,k=k,n=n)
       cumsq(e=e,k=k,n=n)
+      on.exit(par(oldpar))
     }
-    on.exit(par(oldpar))
   }
   stab_plot(graph_save)
   

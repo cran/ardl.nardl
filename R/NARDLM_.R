@@ -427,15 +427,15 @@ nardl_uecm <- function(x,
   nobs <- nobs(fit)
   e <-  fit$residuals
   stab_plot <- function(graph_save){
-    oldpar <- par(no.readonly = TRUE)
     if(graph_save == TRUE){
+      oldpar <- par(no.readonly = TRUE)
       e <-  fit$residuals
       n <-  nobs
       par(mfrow = c(1,2))
       cusum(e=e,k=k,n=n)
       cumsq(e=e,k=k,n=n)
+      on.exit(par(oldpar))
     }
-    on.exit(par(oldpar))
   }
   stab_plot(graph_save)
   

@@ -403,39 +403,39 @@ neg <- str_flatten(paste(str_subset(sr_cof_nm, pattern = "_neg"), ' '))
 pos <- str_flatten(paste(str_subset(sr_cof_nm, pattern = "_pos"), ' '))
 {
   if (don > 0 & dop > 0) {
-    neg = paste(str_split(neg, boundary("word"))[[1]],'+')
-    pos = paste(str_split(pos, boundary("word"))[[1]],'+')
-    pos = c('=', pos)
-    pos = c(pos[-length(pos)],str_split(pos[length(pos)], boundary("word"))[[1]])
+    neg = paste(str_split(neg, boundary("word"))[[1]], "+")
+    pos = paste(str_split(pos, boundary("word"))[[1]], "+")
+    pos = c("=", pos)
+    pos = c(pos[-length(pos)], str_split(pos[length(pos)], boundary("word"))[[1]])
     neg = c(neg[-length(neg)], str_split(neg[length(neg)], boundary("word"))[[1]])
     pos_neg <- str_flatten(c(neg, pos))
     wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = pos_neg, verbose = F, test = "F")
     sr_asym_test <- cbind(Fstat = wld_test$F[2], Pval = wld_test$`Pr(>F)`[2])
     rownames(sr_asym_test) <- decomp
-    sr_asym_test
   }
   else {
     if (length(ppp) > 0) {
-      pos = paste(str_split(pos, boundary("word"))[[1]],'+')
-      pos = c(pos[-length(pos)],str_split(pos[length(pos)], boundary("word"))[[1]])
-      pos = c(pos,'= 0')
+      pos = paste(str_split(pos, boundary("word"))[[1]], "+")
+      pos = c(pos[-length(pos)], str_split(pos[length(pos)], boundary("word"))[[1]])
+      pos = c(pos, "= 0")
       pos_h <- str_flatten(pos)
       wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = pos_h, verbose = F, test = "F")
-      sr_asym_test <- cbind(Fstat = wld_test$F[2],  Pval = wld_test$`Pr(>F)`[2])
+      sr_asym_test <- cbind(Fstat = wld_test$F[2], Pval = wld_test$`Pr(>F)`[2])
       rownames(sr_asym_test) <- decomp
-      sr_asym_test
     }
     else {
-      neg = paste(str_split(neg, boundary("word"))[[1]],'+')
-      neg = c(neg[-length(neg)],str_split(neg[length(neg)], boundary("word"))[[1]])
-      neg = c(neg,'= 0')
-      neg_h <- str_flatten(neg)
-      wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = neg_h, 
-                                   verbose = F, test = "F")
-      sr_asym_test <- cbind(Fstat = wld_test$F[2], 
-                            Pval = wld_test$`Pr(>F)`[2])
-      rownames(sr_asym_test) <- decomp
-      sr_asym_test
+      if (length(nnn) > 0) {
+        neg = paste(str_split(neg, boundary("word"))[[1]], "+")
+        neg = c(neg[-length(neg)], str_split(neg[length(neg)], boundary("word"))[[1]])
+        neg = c(neg, "= 0")
+        neg_h <- str_flatten(neg)
+        wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = neg_h, verbose = F, test = "F")
+        sr_asym_test <- cbind(Fstat = wld_test$F[2], Pval = wld_test$`Pr(>F)`[2])
+        rownames(sr_asym_test) <- decomp
+      }
+      else {
+        sr_asym_test = c('This model is similar to Short-run symmetric restriction (SRSR). Thus, no need for short-run asymmetric test. See nardl_uecm_sym() for more details.')
+      }
     }
   }
 }
@@ -443,15 +443,15 @@ pos <- str_flatten(paste(str_subset(sr_cof_nm, pattern = "_pos"), ' '))
 nobs <- nobs(ecm_gets_fit)
 e <- ecm_gets_fit$residuals
 stab_plot <- function(graph_save) {
-  oldpar <- par(no.readonly = TRUE)
   if (graph_save == TRUE) {
+    oldpar <- par(no.readonly = TRUE)
     e <- ecm_gets_fit$residuals
     n <- nobs
     par(mfrow = c(1, 2))
     cusum(e = e, k = k, n = n)
     cumsq(e = e, k = k, n = n)
+    on.exit(par(oldpar))
   }
-  on.exit(par(oldpar))
 }
 stab_plot(graph_save)
 {
