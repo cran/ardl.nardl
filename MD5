@@ -1,10 +1,10 @@
-fa5b03beac2995c56299a0ff1e5e58b0 *DESCRIPTION
-d4153e31a647c9608c0648d45b35cbbe *NAMESPACE
-4b42286c2ca15327bb7d1f545e1db942 *NEWS
+b8fd5bf3b76efaee7939ac583fbb7982 *DESCRIPTION
+61a96bc168768620bb8209a46af3b1c5 *NAMESPACE
+a7b3b558725480b2417e0f6b439ac7cf *NEWS
 6d8ce863a3f771a1bd8bed7f74713a39 *R/ARDLM_.R
 3210ee325e593447d6f65a32ec5b765a *R/NARDLM_.R
 27ca0b08d17597810f3f709784aba60d *R/NARDLM_sym.R
-b55fe7fa59c2b10ce17cd737df439e34 *R/auto_case_ardl.R
+c8567ceb143137dabe1e7f1d7e036b5f *R/auto_case_ardl.R
 fb936a6f37d73d83c40ff329cc0cf017 *R/dynamac_bounds_test.R
 98233427af71b565ab02b88b279ed81d *R/gets_ardl_uecm.R
 43eb2332105ef2e14c951d29547b407d *R/gets_nardl_uecm.R
@@ -24,7 +24,7 @@ fdab6183acf6764ad7d2a57c17f4734a *man/cusum.Rd
 5aeb65fce9a6e3f0c7f4156f192695f5 *man/expectation.Rd
 350078fef62b318ff28c04c6320f82ca *man/fuel_price.Rd
 379020773277644049490ba7681bf814 *man/gets_ardl_uecm.Rd
-6870fdc25ffc51768cce964ec0d3aa62 *man/gets_nardl_uecm.Rd
+f42d271beac136f6c2fab77faa8b1245 *man/gets_nardl_uecm.Rd
 efbae24c584abf1e8af6953304952322 *man/lagm.Rd
 f3bc7c613d5d113f3017887b8612009d *man/nardl_auto_case.Rd
 776e2e9e9c4cedc4a6a904ca1092a5c3 *man/nardl_uecm.Rd

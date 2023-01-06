@@ -1,3 +1,6 @@
+Version 1.2.3
+o Debian check error re-submission
+
 Version 1.2.2 
 o Debian check error re-submission
 o Fixed the error < system is exactly singular: U[1,1] = 0 > which appears when computing the short-run asymmetric test when none of the difference decomposed variables is present in the parsimonious model.

@@ -218,7 +218,8 @@ auto_case_ardl <- function(x, dep_var, expl_var, p_order, q_order,
     }
     if (length(lrname) == 2){
       for(i in 1:2){
-        wld_test[[i]] <- waldtest(ecm_gets_fit,test = "F", terms = lrname[[i]])
+        wld_test[[i]] <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = lrname[[i]],
+                                          verbose = F, rhs = rep(0, length(lrname[[i]])), test = "F")
         fstat[[i]] <- cbind(Fstat = wld_test[[i]]$F[2], Pval = wld_test[[i]]$`Pr(>F)`[2])
         rownames(fstat[[i]]) <- c('wald_test')
       }

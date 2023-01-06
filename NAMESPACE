@@ -1,8 +1,7 @@
-export("ardl_uecm",
-       "dynamac_pkg_bounds_test",
-       "gets_ardl_uecm", "gets_nardl_uecm", "auto_case_ardl","nardl_auto_case",
-       "lagm", "nardl_uecm",
-       "nardl_uecm_sym", "output_ren")
+export("ardl_uecm", "auto_case_ardl",
+       "dynamac_pkg_bounds_test", "gets_ardl_uecm",
+       "gets_nardl_uecm", "lagm", "nardl_auto_case",
+       "nardl_uecm", "nardl_uecm_sym", "output_ren")
 importFrom("graphics", "par")
 importFrom("rlist", "list.cbind")
 importFrom("dplyr","lag")

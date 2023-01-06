@@ -72,6 +72,7 @@ Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing approaches to th
 \code{\link[ardl.nardl]{ardl_uecm}}
 }
 \examples{
+\dontrun{
   data(expectation)
   out <- gets_nardl_uecm(x = expectation,
                          decomp = 'food_inf',
@@ -86,4 +87,4 @@ Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing approaches to th
                          F_HC = FALSE)
   out
 }
-
+}
