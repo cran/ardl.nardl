@@ -12,14 +12,19 @@ dynamac_pkg_bounds_test(obs, fstat, tstat = NULL, case, k)
 }
 \arguments{
   \item{obs}{
+  Number of observations
 }
   \item{fstat}{
+  F-statistics 
 }
   \item{tstat}{
+  't-statistic of the lagged dependent variable'
 }
   \item{case}{
+  case I to IV
 }
   \item{k}{
+  'number of regressors appearing in levels in the estimated model, not including the lagged dependent variable' 
 }
 }
 \value{

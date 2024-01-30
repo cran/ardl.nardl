@@ -1,13 +1,13 @@
 \name{gets_nardl_uecm}
 \alias{gets_nardl_uecm}
 \title{
-Parsimonious model for the autoregressive distributed lag model
+Parsimonious NARDL model
 }
 \description{
 Adopt the general-to-specific approach to estimate the autoregressive distributed lag model
 }
 \usage{
-gets_nardl_uecm(x, decomp, dep_var, control = NULL, c_q_order = c(2), 
+gets_nardl_uecm(x, decomp, dep_var, control = NULL, d = Inf, c_q_order = c(2), 
                 p_order = c(3), q_order = c(4), gets_pval = 0.1, order_l = 4, 
                 F_HC = FALSE, graph_save = FALSE, case = 3)}
 \arguments{
@@ -15,13 +15,16 @@ gets_nardl_uecm(x, decomp, dep_var, control = NULL, c_q_order = c(2),
 data frame
 }
   \item{decomp}{
-A character vector. The variable to be decomposed to positive (pos) and negative (neg) variable.
+A character vector. The variable decomposed into positive (pos) and negative (neg) change.
 }
   \item{dep_var}{
   A character vector. The dependent variable 
 }
   \item{control}{
 A character vector. Default is NULL. The second dependent variable.
+}
+  \item{d}{
+An integer or character vector. The threshold value (d) is adopted when computing the partial sum. The default value Inf is the implicit threshold for the partial sum whenever the base 'cumsum' function is adopted. The value of d can be 'mean' or 0 and any other integer specified as the threshold value for the partial sum.
 }
   \item{c_q_order}{
 Integer. Maximum number of lags for 'control'
@@ -70,6 +73,9 @@ Pesaran, M. H., Shin, Y., & Smith, R. J. (2001). Bounds testing approaches to th
 \seealso{
 \code{\link[ardl.nardl]{gets_ardl_uecm}}
 \code{\link[ardl.nardl]{ardl_uecm}}
+}
+\note{
+The decomposed variable should display both positive and negative change, preferably on a balanced scale. However, when a variable display only positive change and no negative change, vice versa, such variable should not be adopted (i.e decomposed).
 }
 \examples{
 \dontrun{

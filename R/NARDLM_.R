@@ -1,5 +1,6 @@
 nardl_uecm <- function(x,
                        decomp,
+                       d = Inf,
                        control = NULL,
                        c_q_order = c(2),
                        p_order = c(3),
@@ -28,13 +29,27 @@ nardl_uecm <- function(x,
     n <- nrow(dx)
     cl <- ncol(dx)
     pos <- dx[, 1:cl] >= 0
+    message(ifelse(ceiling((sum(pos)/(n-1))*100) == 50, 
+                   'positive and negative change in decomp are equal.', 
+                   paste('Percentage of positive change in decomp is',
+                         ceiling((sum(pos)/(n-1))*100), 'percent while negative change is',
+                         100 - ceiling((sum(pos)/(n-1))*100))))
     dxp <- as.matrix(as.numeric(pos) * dx[, 1:cl])
     colnames(dxp) <- paste(colnames(dx), "pos", sep = "_")
     dxn <- as.matrix((1 - as.numeric(pos)) * dx[, 1:cl])
     colnames(dxn) <- paste(colnames(dx), "neg", sep = "_")
-    xp <- apply(dxp, 2, cumsum)
+    cumsum_reset <- function(threshold) {
+      function(x) {
+        accumulate(x, ~if_else(.x>=threshold, .y, .x+.y))
+      }  
+    }
+    if (d == 'mean'){
+      (d = mean(dx))
+    }
+    partial_sum <- function(x, ...) c(cumsum_reset(threshold = d[[1]])(x, ...))
+    xp <- apply(dxp, 2, partial_sum)
     colnames(xp) <- paste(colnames(x), "pos", sep = "_")
-    xn <- apply(dxn, 2, cumsum)
+    xn <- apply(dxn, 2, partial_sum)
     colnames(xn) <- paste(colnames(x), "neg", sep = "_")
     lagy <- lagm(as.matrix(y), 1)
     colnames(lagy) <- paste0(dep_var,'_1')
@@ -141,13 +156,27 @@ nardl_uecm <- function(x,
     n <- nrow(dx)
     cl <- ncol(dx)
     pos <- dx[, 1:cl] >= 0
+    message(ifelse(ceiling((sum(pos)/(n-1))*100) == 50, 
+                   'positive and negative changes in decomp are equal.', 
+                   paste('Percentage of positive changes in decomp is',
+                         ceiling((sum(pos)/(n-1))*100), 'percent while negative change is',
+                         100 - ceiling((sum(pos)/(n-1))*100))))
     dxp <- as.matrix(as.numeric(pos) * dx[, 1:cl])
     colnames(dxp) <- paste(colnames(dx), "pos", sep = "_")
     dxn <- as.matrix((1 - as.numeric(pos)) * dx[, 1:cl])
     colnames(dxn) <- paste(colnames(dx), "neg", sep = "_")
-    xp <- apply(dxp, 2, cumsum)
+    cumsum_reset <- function(threshold) {
+      function(x) {
+        accumulate(x, ~if_else(.x>=threshold, .y, .x+.y))
+      }  
+    }
+    if (d == 'mean'){
+      (d = mean(dx))
+    }
+    partial_sum <- function(x, ...) c(cumsum_reset(threshold = d[[1]])(x, ...))
+    xp <- apply(dxp, 2, partial_sum)
     colnames(xp) <- paste(colnames(x), "pos", sep = "_")
-    xn <- apply(dxn, 2, cumsum)
+    xn <- apply(dxn, 2, partial_sum)
     colnames(xn) <- paste(colnames(x), "neg", sep = "_")
     lagy <- lagm(as.matrix(y), 1)
     lxp <- lagm(as.matrix(xp), 1)

@@ -33,7 +33,7 @@ Logical (default is FALSE). If TRUE, stability plot is displayed as well.
 Character vector containing the explanatory variable(s).
 }
   \item{case}{
-A numerical vector that can take a value between 1 to 5. The default value is 3 - restricted constant (no intercept), no trend
+A numerical vector that can take a value between 1 to 5. The default value is 3.
 }
 }
 \value{

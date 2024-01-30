@@ -7,7 +7,7 @@ Estimate the nonlinear ARDL (NARDL) Error Correction Model
 Function to estimate Shin, Yu, and Greenwood-Nimmo (2014) nonlinear ARDL (NARDL), the NARDL ECM, and conduct the bounds test for cointegration.
 }
 \usage{
-nardl_uecm(x, decomp, control = NULL, c_q_order = c(2), 
+nardl_uecm(x, decomp, d = Inf, control = NULL, c_q_order = c(2), 
 p_order = c(3), q_order = c(4), dep_var, order_l = 4, graph_save = FALSE, case = 3)
 }
 \arguments{
@@ -15,7 +15,10 @@ p_order = c(3), q_order = c(4), dep_var, order_l = 4, graph_save = FALSE, case =
 A dataframe object.  S3 dataframe object not applicable.
 }
   \item{decomp}{
-A character vector. The right hand side variable to be decomposed into positive (pos) and negative (neg)
+A character vector. The variable to be decomposed into positive (pos) and negative (neg) change.
+}
+  \item{d}{
+An integer or character vector. The default value Inf for the threshold value (d) is adopted when computing the partial sum. Inf is the implicit threshold for the partial sum whenever the base 'cumsum' function is adopted. The value of d can be 'mean' or 0 and any other integer specified as the threshold value for the partial sum.
 }
 \item{control}{
 A character vector with one element serving as the second variable in the right hand side of the equation. The default is NULL.
@@ -38,7 +41,7 @@ Positive integer. lag order for the serial correlation, and heteroscedasticity t
 \item{graph_save}{
 Logical (default is FALSE). If TRUE, stability plot is displayed.}
 \item{case}{
-A numerical vector that can take a value between 1 to 5. The default value is 3 - restricted constant (no intercept), no trend. See details for more information.
+A numerical vector that can take a value between 1 to 5. The default value is case 3. See details for more information.
 }
 }
 \value{
@@ -70,7 +73,9 @@ Zaghdoudi, T. (2018). nardl: Nonlinear Cointegrating Autoregressive Distributed 
 \code{\link[ardl.nardl]{ardl_uecm}}
 \code{\link[ardl.nardl]{nardl_uecm_sym}}
 }
-
+\note{
+The decomposed variable should display both positive and negative trend, preferably on a balanced scale. However, when a variable display only positive change and no negative change, vice versa, such variable should not be adopted (i.e decomposed).
+}
 \examples{
 data(fuel_price)
 output_n1_case5 <- nardl_uecm(x = fuel_price,
@@ -95,14 +100,4 @@ output_n2_case3 <- nardl_uecm(x = fuel_price,
                                  graph_save = FALSE, 
                                  case = 3)
 output_n2_case3
-output_n3_case3 <- nardl_uecm(x = fuel_price, 
-                              decomp  = c('wti'), 
-                              control =NULL,
-                              c_q_order = NULL, 
-                              p_order = c(3), 
-                              q_order = c(5), 
-                              dep_var = c('fpp'), 
-                              graph_save = FALSE, 
-                              case = 3)
-output_n3_case3
 }

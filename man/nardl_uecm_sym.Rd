@@ -11,8 +11,8 @@ Performs one of Short-run symmetry restrictions or the
 longrun symmetry restrictions.
 }
 \usage{
-nardl_uecm_sym(x, assumption = c("SRSR"), decomp, control = c(2), c_q_order = c(2), 
-p_order = c(3), q_order = c(4), dep_var, graph_save = FALSE, case = 3)
+nardl_uecm_sym(x, assumption = c("SRSR"), decomp, d = Inf, control = c(2), 
+c_q_order = c(2), p_order = c(3), q_order = c(4), dep_var, graph_save = FALSE, case = 3)
 }
 \arguments{
   \item{x}{
@@ -20,10 +20,12 @@ A dataframe object.  S3 dataframe object not applicable.
 }
   \item{assumption}{
 The Short-run symmetry restrictions (SRSR), the default, assume the transitory asymmetric effect is insignificant and testing the longrun asymmetric effect. longrun symmetry restrictions (LRSR) imposes symmetric effect on the longrun coefficients of the positive and negative decomposed variable, and assuming the presence of transitory asymmetric effect.
-
 }
   \item{decomp}{
 A variable to be decomposed into positive (pos) and negative (neg)
+}
+  \item{d}{
+An integer or character vector. The default value Inf for the threshold value (d) is adopted when computing the partial sum. Inf is the implicit threshold for the partial sum whenever the base 'cumsum' function is adopted. The value of d can be 'mean' or 0 and any other integer specified as the threshold value for the partial sum.
 }
   \item{control}{
 A character vector with one element serving as the second variable single control variable. The default is c(2) and applicable when control variable is specified.
@@ -43,7 +45,7 @@ Character vector which contain the dependent variable.
   \item{graph_save}{
 Logical (default is FALSE). If TRUE, stability plot is displayed.}
   \item{case}{
-A numerical vector of either 1, 2 3, 4 or 5. The default value is 3 - restricted constant (no intercept), no trend. See details for more information.
+A numerical vector of either 1, 2 3, 4 or 5. The default value is 3. See details for more information.
 }
 }
 \details{
@@ -76,6 +78,9 @@ Zaghdoudi, T. (2018). nardl: Nonlinear Cointegrating Autoregressive Distributed 
 \code{\link[ardl.nardl]{ardl_uecm}}
 \code{\link[ardl.nardl]{nardl_uecm}}
 \code{\link[dynamac]{pssbounds}}
+}
+\note{
+The decomposed variable should display both positive and negative change, preferably on a balanced scale. However, when a variable display only positive change and no negative change, vice versa, such variable should not be adopted (i.e decomposed).
 }
 \examples{
 data(syg_data)

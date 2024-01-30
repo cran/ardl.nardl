@@ -1,12 +1,14 @@
 export("ardl_uecm", "auto_case_ardl",
        "dynamac_pkg_bounds_test", "gets_ardl_uecm",
        "gets_nardl_uecm", "lagm", "nardl_auto_case",
-       "nardl_uecm", "nardl_uecm_sym", "output_ren")
+       "nardl_uecm", "nardl_uecm_sym", "output_ren", "nardl_mdv")
 importFrom("graphics", "par")
-importFrom("rlist", "list.cbind")
-importFrom("dplyr","lag")
+importFrom("rlist", "list.rbind", "list.cbind")
+importFrom("plyr","ddply", "colwise")
+importFrom("dplyr","lag", "select", "if_else","count", "filter")
+importFrom("purrr","accumulate","compact")
 importFrom("nardl", "ArchTest","cusum","cumsq")
 importFrom("stats", "as.formula", "coef", "formula", "lm", "model.matrix", "na.exclude", "na.omit", "pnorm", "vcov","pt")
 importFrom('gets', 'gets.lm', 'diagnostics')
 importFrom('car', 'linearHypothesis')
-import('lmtest', 'stringr', 'texreg', 'tseries','gets','sandwich')
+import('lmtest', 'stringr', 'texreg', 'tseries','gets','sandwich', 'purrr', 'rlist', 'tidyselect')

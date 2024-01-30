@@ -7,7 +7,7 @@ Obtain the best NARDL model specification and bounds test.
 This function finds the best NARDL model specification and conduct bounds test by relying on the general to specific approach.
 }
 \usage{
-nardl_auto_case(x, decomp, dep_var, control = NULL, c_q_order = c(2), 
+nardl_auto_case(x, decomp, dep_var, control = NULL, d = Inf, c_q_order = c(2), 
                 p_order = c(3), q_order, gets_pval = 0.1, 
                 order_l = order_l, graph_save = FALSE)
 }
@@ -23,6 +23,9 @@ A character vector. The variable to be decomposed to positive (pos) and negative
 }
   \item{control}{
 A character vector. Default is NULL. The second dependent variable.
+}
+  \item{d}{
+An integer or character vector. The threshold value (d) is adopted when computing the partial sum. The default value Inf is the implicit threshold for the partial sum whenever the base 'cumsum' function is adopted. The value of d can be 'mean' or 0 and any other integer specified as the threshold value for the partial sum.
 }
   \item{c_q_order}{
 Integer. Maximum number of lags for 'control'

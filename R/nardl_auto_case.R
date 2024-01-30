@@ -1,7 +1,8 @@
 nardl_auto_case = function (x, 
                              decomp, 
                              dep_var, 
-                             control = NULL, 
+                             control = NULL,
+                             d = Inf,
                              c_q_order = c(2), 
                              p_order = c(3), 
                              q_order,
@@ -28,13 +29,27 @@ nardl_auto_case = function (x,
     n <- nrow(dx)
     cl <- ncol(dx)
     pos <- dx[, 1:cl] >= 0
+    message(ifelse(ceiling((sum(pos)/(n-1))*100) == 50, 
+                   'positive and negative change in decomp are equal.', 
+                   paste('Percentage of positive change in decomp is',
+                         ceiling((sum(pos)/(n-1))*100), 'percent while negative change is',
+                         100 - ceiling((sum(pos)/(n-1))*100))))
     dxp <- as.matrix(as.numeric(pos) * dx[, 1:cl])
     colnames(dxp) <- paste(colnames(dx), "pos", sep = "_")
     dxn <- as.matrix((1 - as.numeric(pos)) * dx[, 1:cl])
     colnames(dxn) <- paste(colnames(dx), "neg", sep = "_")
-    xp <- apply(dxp, 2, cumsum)
+    cumsum_reset <- function(threshold) {
+      function(x) {
+        accumulate(x, ~if_else(.x>=threshold, .y, .x+.y))
+      }  
+    }
+    if (d == 'mean'){
+      (d = mean(dx))
+    }
+    partial_sum <- function(x, ...) c(cumsum_reset(threshold = d[[1]])(x, ...))
+    xp <- apply(dxp, 2, partial_sum)
     colnames(xp) <- paste(colnames(x), "pos", sep = "_")
-    xn <- apply(dxn, 2, cumsum)
+    xn <- apply(dxn, 2, partial_sum)
     colnames(xn) <- paste(colnames(x), "neg", sep = "_")
     lagy <- lagm(as.matrix(y), 1)
     colnames(lagy) <- paste0(dep_var, "_1")
@@ -112,13 +127,27 @@ nardl_auto_case = function (x,
     n <- nrow(dx)
     cl <- ncol(dx)
     pos <- dx[, 1:cl] >= 0
+    message(ifelse(ceiling((sum(pos)/(n-1))*100) == 50, 
+                   'positive and negative changes in decomp are equal.', 
+                   paste('Percentage of positive change in decomp is',
+                         ceiling((sum(pos)/(n-1))*100), 'percent while negative change is',
+                         100 - ceiling((sum(pos)/(n-1))*100))))
     dxp <- as.matrix(as.numeric(pos) * dx[, 1:cl])
     colnames(dxp) <- paste(colnames(dx), "pos", sep = "_")
     dxn <- as.matrix((1 - as.numeric(pos)) * dx[, 1:cl])
     colnames(dxn) <- paste(colnames(dx), "neg", sep = "_")
-    xp <- apply(dxp, 2, cumsum)
     colnames(xp) <- paste(colnames(x), "pos", sep = "_")
-    xn <- apply(dxn, 2, cumsum)
+    cumsum_reset <- function(threshold) {
+      function(x) {
+        accumulate(x, ~if_else(.x>=threshold, .y, .x+.y))
+      }  
+    }
+    if (d == 'mean'){
+      (d = mean(dx))
+    }
+    partial_sum <- function(x, ...) c(cumsum_reset(threshold = d[[1]])(x, ...))
+    xp <- apply(dxp, 2, partial_sum)
+    xn <- apply(dxn, 2, partial_sum)
     colnames(xn) <- paste(colnames(x), "neg", sep = "_")
     lagy <- lagm(as.matrix(y), 1)
     lxp <- lagm(as.matrix(xp), 1)
@@ -429,7 +458,7 @@ pos <- str_flatten(paste(str_subset(sr_cof_nm, pattern = "_pos"), ' '))
   }
   else {
     if (length(ppp) > 0) {
-      message('Only one of the differenced - decomposed variable (D.decomp_pos) appears in the final model. The value in `Shortrun_asym` is the wald test on the sum of the coefficients of the available short-run decomposed variable does not have any significant effect on the best model')
+      message('Only one of the differenced - decomposed variable (D.decomp_pos) appeared in the final model. The value in `Shortrun_asym` is the wald test on the sum of the coefficients of the available short-run decomposed variable does not have any significant effect on the best model')
       pos = paste(str_split(pos, boundary("word"))[[1]], "+")
       pos = c(pos[-length(pos)], str_split(pos[length(pos)], boundary("word"))[[1]])
       pos = c(pos, "= 0")
@@ -446,14 +475,14 @@ pos <- str_flatten(paste(str_subset(sr_cof_nm, pattern = "_pos"), ' '))
         neg = c(neg, "= 0")
         neg_h <- str_flatten(neg)
         wld_test <- linearHypothesis(ecm_gets_fit, hypothesis.matrix = neg_h, verbose = F, test = "F")
-        message('Only one of the differenced - decomposed variable (D.decomp_neg) appears in the final model. The value in `Shortrun_asym` is the wald test on the sum of the coefficients of the available short-run decomposed variable does not have any significant effect on the best model')
+        message('Only one of the differenced - decomposed variable (D.decomp_neg) appeared in the final model. The value in `Shortrun_asym` is the wald test on the sum of the coefficients of the available short-run decomposed variable does not have any significant effect on the best model')
         sr_asym_test <- cbind(Fstat = wld_test$F[2], Pval = wld_test$`Pr(>F)`[2])
         rownames(sr_asym_test) <- decomp
         
       }
       else {
         message('This model is similar to Short-run symmetric restriction (SRSR). Thus, no need for short-run asymmetric test. See nardl_uecm_sym() for more details.')
-        sr_asym_test = c('This model is similar to Short-run symmetric restriction (SRSR). Thus, no need for short-run asymmetric test. See nardl_uecm_sym() for more details.')
+        sr_asym_test = c('This model is similar to Short-run symmetric restriction. Thus, no need for short-run asymmetric test. See nardl_uecm_sym() for more details.')
       }
     }
   }
